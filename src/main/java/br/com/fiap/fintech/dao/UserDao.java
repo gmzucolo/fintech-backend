@@ -53,16 +53,125 @@ public class UserDao {
     }
 
     public void updateUser(UserModel userModel) throws SQLException {
-    	//TODO update method
+    	
+    	String sqlUpdate =
+                "UPDATE T_SIP_USER_INFO SET NM_USER = ?, CPF_USER = ?, DS_USER_EMAIL = ?, NR_USER_PHONE = ?, NR_USER_DDI = ?, NR_USER_DDD = ? WHERE ID_USER = ?";
+    	
+    	Connection connection;
+    	PreparedStatement pstm = null;
+    	
+    	try {
+            connection = ConnectionFactory.createConnectionToSQL();
+            
+            pstm = connection.prepareStatement(sqlUpdate);           
+            pstm.setString(1, userModel.getNameUser());
+            pstm.setLong(2, userModel.getCpfUser());
+            pstm.setString(3, userModel.getEmailUser());
+            pstm.setInt(4, userModel.getPhoneUser());
+            pstm.setInt(5, userModel.getDdiUser());
+            pstm.setInt(6, userModel.getDddUser());
+            pstm.setInt(7, userModel.getIdUser());
+            
+            pstm.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.err.println("Nao foi possivel se conectar ao Oracle FIAP!");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("O Driver JDBC nao foi encontrado!");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void removeUser(int idUser) throws SQLException {
-    	//TODO delete method
+    	String sqlDelete =
+                "DELETE FROM T_SIP_USER_INFO WHERE ID_USER = ?";
+    	
+    	Connection connection;
+    	PreparedStatement pstm = null;
+    	
+    	try {
+            connection = ConnectionFactory.createConnectionToSQL();
+            
+            pstm = connection.prepareStatement(sqlDelete);           
+            pstm.setInt(1, idUser);
+            
+            pstm.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.err.println("Nao foi possivel se conectar ao Oracle FIAP!");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("O Driver JDBC nao foi encontrado!");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstm != null) {
+                    pstm.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public UserModel getUserById(int idUser) throws SQLException {
-    	//TODO getUserById method
-    	UserModel userModel = null;
+    	
+    	String sqlGetUserById = "SELECT * FROM T_SIP_USER_INFO WHERE ID_USER = ?";
+
+        Connection connection = null;
+        PreparedStatement pstm = null;
+        ResultSet result = null;
+        UserModel userModel = null;
+
+        try {
+            connection = ConnectionFactory.createConnectionToSQL();
+
+            pstm = (PreparedStatement) connection.prepareStatement(sqlGetUserById);
+            pstm.setInt(1, idUser);          
+            result = pstm.executeQuery();
+                       
+            if (result.next()) {           
+                String nameUser = result.getString("nm_user");
+                Long cpfUser = result.getLong("cpf_user");
+                String emailUser = result.getString("ds_user_email");
+                int phoneUser = result.getInt("nr_user_phone");
+                int ddiUser = result.getInt("nr_user_ddi");
+                int dddUser = result.getInt("nr_user_ddd");
+
+                userModel = new UserModel(idUser, nameUser, cpfUser, emailUser, phoneUser, ddiUser, dddUser);
+
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Nao foi possivel se conectar ao Oracle FIAP!");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("O Driver JDBC nao foi encontrado!");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (result != null) {
+                    result.close();
+                }
+                if (pstm != null) {
+                    pstm.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }    
     	return userModel;
     }
 
@@ -75,15 +184,15 @@ public class UserDao {
         Connection connection = null;
         PreparedStatement pstm = null;
         ResultSet result = null;
-
+        UserModel userModel;
+        
         try {
             connection = ConnectionFactory.createConnectionToSQL();
 
             pstm = (PreparedStatement) connection.prepareStatement(sqlGetAllUsers);
 
             result = pstm.executeQuery();
-
-            UserModel userModel;
+          
             while (result.next()) {
                 userModel = new UserModel();
                 userModel.setIdUser(result.getInt("id_user"));
