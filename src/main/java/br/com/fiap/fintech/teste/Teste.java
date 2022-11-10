@@ -58,7 +58,7 @@ public class Teste {
         );
 
         TransactionEarningsDao transactionEarningsDao1 = new TransactionEarningsDao();
-        transactionEarningsDao1.insertTransactionEarnings(transactionEarningsModel1, userModel1);
+        transactionEarningsDao1.insertEarnings(transactionEarningsModel1, userModel1);
 
         TransactionExpensesModel transactionExpensesModel1 = new TransactionExpensesModel(
                 1,
@@ -109,7 +109,7 @@ public class Teste {
         );
 
         TransactionEarningsDao transactionEarningsDao2 = new TransactionEarningsDao();
-        transactionEarningsDao2.insertTransactionEarnings(transactionEarningsModel2, userModel2);
+        transactionEarningsDao2.insertEarnings(transactionEarningsModel2, userModel2);
 
         TransactionExpensesModel transactionExpensesModel2 = new TransactionExpensesModel(
                 2,
@@ -160,7 +160,7 @@ public class Teste {
         );
 
         TransactionEarningsDao transactionEarningsDao3 = new TransactionEarningsDao();
-        transactionEarningsDao3.insertTransactionEarnings(transactionEarningsModel3, userModel3);
+        transactionEarningsDao3.insertEarnings(transactionEarningsModel3, userModel3);
 
         TransactionExpensesModel transactionExpensesModel3 = new TransactionExpensesModel(
                 3,
