@@ -4,14 +4,14 @@ public class User {
 
     private int idUser;
     private String nameUser;
-    private Long cpfUser;
+    private int cpfUser;
     private String emailUser;
 
     public User() {	
     	super();
     }
 
-    public User(int idUser, String nameUser, Long cpfUser, String emailUser) {
+    public User(int idUser, String nameUser, int cpfUser, String emailUser) {
     	super();
         this.setIdUser(idUser);
         this.setNameUser(nameUser);
@@ -35,11 +35,11 @@ public class User {
         this.nameUser = nameUser;
     }
 
-    public Long getCpfUser() {
+    public int getCpfUser() {
         return cpfUser;
     }
 
-    public void setCpfUser(Long cpfUser) {
+    public void setCpfUser(int cpfUser) {
         this.cpfUser = cpfUser;
     }
 

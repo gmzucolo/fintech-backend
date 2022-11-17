@@ -14,7 +14,7 @@ public class UserDAOTeste {
 		UserDAO userDAO = DAOFactory.getUserDAO();
 
 		// insert user
-		User user = new User(1, "gustavo", 1111111111L, "teste1@teste.com.br");
+		User user = new User(1, "gustavo", 1111111111, "teste1@teste.com.br");
 
 		try {
 			userDAO.insertUser(user);
@@ -26,7 +26,7 @@ public class UserDAOTeste {
 		// fetch user by id and update
 		user = userDAO.getUserById(1);
 		user.setNameUser("adriano");
-		user.setCpfUser(222222222L);
+		user.setCpfUser(222222222);
 		user.setEmailUser("teste2@teste.com.br");
 		try {
 			userDAO.updateUser(user);

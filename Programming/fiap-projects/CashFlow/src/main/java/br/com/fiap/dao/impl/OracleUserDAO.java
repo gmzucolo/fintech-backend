@@ -31,7 +31,7 @@ public class OracleUserDAO implements UserDAO {
 			pstm = connection.prepareStatement(sqlInsert);
 			pstm.setInt(1, user.getIdUser());
 			pstm.setString(2, user.getNameUser());
-			pstm.setLong(3, user.getCpfUser());
+			pstm.setInt(3, user.getCpfUser());
 			pstm.setString(4, user.getEmailUser());
 			pstm.executeUpdate();
 
@@ -60,7 +60,7 @@ public class OracleUserDAO implements UserDAO {
 
 			pstm = connection.prepareStatement(sqlUpdate);
 			pstm.setString(1, user.getNameUser());
-			pstm.setLong(2, user.getCpfUser());
+			pstm.setInt(2, user.getCpfUser());
 			pstm.setString(3, user.getEmailUser());
 			pstm.setInt(4, user.getIdUser());
 			pstm.executeUpdate();
@@ -124,7 +124,7 @@ public class OracleUserDAO implements UserDAO {
 			if (result.next()) {
 				int idUser = result.getInt("id_user");
 				String nameUser = result.getString("nm_user");
-				Long cpfUser = result.getLong("cpf_user");
+				int cpfUser = result.getInt("cpf_user");
 				String emailUser = result.getString("ds_user_email");
 
 				user = new User(idUser, nameUser, cpfUser, emailUser);
@@ -162,7 +162,7 @@ public class OracleUserDAO implements UserDAO {
 			while (result.next()) {
 				int idUser = result.getInt("id_user");
 				String nameUser = result.getString("nm_user");
-				Long cpfUser = result.getLong("cpf_user");
+				int cpfUser = result.getInt("cpf_user");
 				String emailUser = result.getString("ds_user_email");
 
 				User user = new User(idUser, nameUser, cpfUser, emailUser);
