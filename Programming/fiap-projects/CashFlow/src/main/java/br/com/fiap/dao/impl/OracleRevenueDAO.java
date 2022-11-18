@@ -7,30 +7,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.fiap.bean.Revenue;
 import br.com.fiap.bean.User;
-import br.com.fiap.dao.UserDAO;
+import br.com.fiap.dao.RevenueDAO;
 import br.com.fiap.exception.DBException;
 import br.com.fiap.singleton.ConnectionManager;
 
-public class OracleUserDAO implements UserDAO {
-
+public class OracleRevenueDAO implements RevenueDAO {
+	
 	private Connection connection;
 
-	@Override
-	public void insertUser(User user) throws DBException {
-
+	public void insertRevenue(Revenue revenue, User user) throws DBException {
+		
 		PreparedStatement pstm = null;
 
 		try {
 			connection = ConnectionManager.getInstance().getConnection();
 
-			String sqlInsert = "INSERT INTO TB_USER(ID_USER, NM_USER, CPF_USER, DS_USER_EMAIL)" + "VALUES (?, ?, ?, ?)";
+			String sqlInsert = "INSERT INTO TB_REVENUE(ID_REVENUE, TB_USER_ID_USER, VL_REVENUE)" + "VALUES (?, ?, ?)";
 
 			pstm = connection.prepareStatement(sqlInsert);
-			pstm.setInt(1, user.getIdUser());
-			pstm.setString(2, user.getNameUser());
-			pstm.setInt(3, user.getCpfUser());
-			pstm.setString(4, user.getEmailUser());
+			pstm.setInt(1, revenue.getIdRevenue());
+			pstm.setInt(2, user.getIdUser());
+			pstm.setDouble(3, revenue.getVlRevenue());		
 			pstm.executeUpdate();
 
 		} catch (SQLException e) {
@@ -44,23 +43,20 @@ public class OracleUserDAO implements UserDAO {
 				e.printStackTrace();
 			}
 		}
-
+		
 	}
-
-	@Override
-	public void updateUser(User user) throws DBException {
-
+	
+	public void updateRevenue(Revenue revenue) throws DBException {
+		
 		PreparedStatement pstm = null;
 
 		try {
 			connection = ConnectionManager.getInstance().getConnection();
-			String sqlUpdate = "UPDATE TB_USER SET NM_USER = ?, CPF_USER = ?, DS_USER_EMAIL = ? WHERE ID_USER = ?";
+			String sqlUpdate = "UPDATE TB_REVENUE SET VL_REVENUE = ? WHERE ID_REVENUE = ?";
 
 			pstm = connection.prepareStatement(sqlUpdate);
-			pstm.setString(1, user.getNameUser());
-			pstm.setInt(2, user.getCpfUser());
-			pstm.setString(3, user.getEmailUser());
-			pstm.setInt(4, user.getIdUser());
+			pstm.setDouble(1, revenue.getVlRevenue());
+			pstm.setInt(2, revenue.getIdRevenue());
 			pstm.executeUpdate();
 
 		} catch (SQLException e) {
@@ -74,20 +70,18 @@ public class OracleUserDAO implements UserDAO {
 				e.printStackTrace();
 			}
 		}
-
 	}
-
-	@Override
-	public void removeUser(int idUser) throws DBException {
-
+	
+	public void removeRevenue(int idRevenue) throws DBException {
+		
 		PreparedStatement pstm = null;
 
 		try {
 			connection = ConnectionManager.getInstance().getConnection();
-			String sqlDelete = "DELETE FROM TB_USER WHERE ID_USER = ?";
+			String sqlDelete = "DELETE FROM TB_REVENUE WHERE ID_REVENUE = ?";
 
 			pstm = connection.prepareStatement(sqlDelete);
-			pstm.setInt(1, idUser);
+			pstm.setInt(1, idRevenue);
 			pstm.executeUpdate();
 
 		} catch (SQLException e) {
@@ -101,31 +95,26 @@ public class OracleUserDAO implements UserDAO {
 				e.printStackTrace();
 			}
 		}
-
-	}
-
-	@Override
-	public User getUserById(int id) {
-
+	} 
+	
+	public Revenue getRevenueById(int idRevenue) throws DBException {
+		
 		Connection connection = null;
 		PreparedStatement pstm = null;
 		ResultSet result = null;
-		User user = null;
+		Revenue revenue = null;
 
 		try {
 			connection = ConnectionManager.getInstance().getConnection();
 
-			pstm = connection.prepareStatement("SELECT * FROM TB_USER WHERE ID_USER = ?");
-			pstm.setInt(1, id);
+			pstm = connection.prepareStatement("SELECT * FROM TB_REVENUE WHERE ID_REVENUE = ?");
+			pstm.setInt(1, idRevenue);
 			result = pstm.executeQuery();
 
 			if (result.next()) {
-				int idUser = result.getInt("id_user");
-				String nameUser = result.getString("nm_user");
-				int cpfUser = result.getInt("cpf_user");
-				String emailUser = result.getString("ds_user_email");
+				Double vlRevenue = result.getDouble("vl_revenue");				
 
-				user = new User(idUser, nameUser, cpfUser, emailUser);
+				revenue = new Revenue(idRevenue, vlRevenue);
 
 			}
 
@@ -140,31 +129,27 @@ public class OracleUserDAO implements UserDAO {
 			}
 		}
 
-		return user;
+		return revenue;
 	}
-
-	@Override
-	public List<User> getAllUsers() {
-
-		List<User> userList = new ArrayList<User>();
+	
+	public List<Revenue> getAllRevenues() {
+		
+		List<Revenue> userRevenue = new ArrayList<Revenue>();
 		PreparedStatement pstm = null;
 		ResultSet result = null;
 
 		try {
 			connection = ConnectionManager.getInstance().getConnection();
 
-			String sqlGetAllUsers = "SELECT * FROM TB_USER";
-			pstm = (PreparedStatement) connection.prepareStatement(sqlGetAllUsers);
+			String sqlGetAllRevenue = "SELECT * FROM TB_REVENUE";
+			pstm = (PreparedStatement) connection.prepareStatement(sqlGetAllRevenue);
 			result = pstm.executeQuery();
 
 			while (result.next()) {
-				int idUser = result.getInt("id_user");
-				String nameUser = result.getString("nm_user");
-				int cpfUser = result.getInt("cpf_user");
-				String emailUser = result.getString("ds_user_email");
-
-				User user = new User(idUser, nameUser, cpfUser, emailUser);
-				userList.add(user);
+				int idRevenue = result.getInt("id_revenue");				
+				Double vlRevenue = result.getDouble("vl_revenue");
+				Revenue revenue = new Revenue(idRevenue, vlRevenue);
+				userRevenue.add(revenue);
 
 			}
 
@@ -179,7 +164,7 @@ public class OracleUserDAO implements UserDAO {
 			}
 		}
 
-		return userList;
+		return userRevenue;
 	}
 
 }
